@@ -4,7 +4,9 @@
   align-items: center;
   margin-bottom: 20px;
 }
-
+.padding-button {
+  padding-top: 30px;
+}
 .next-button {
   padding: 10px;
   border: 1px solid #ccc;

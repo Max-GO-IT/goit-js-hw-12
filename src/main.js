@@ -40,7 +40,7 @@ searchForm.addEventListener('submit', (event) => {
     gallery.innerHTML = '';
     currentPage = 1;
     searchQueryTemp=searchQuery; 
-    //nextButton.classList.add('hidden')
+    nextButton.classList.remove('hidden')
    
  
   console.log(currentPage);
@@ -69,7 +69,7 @@ searchForm.addEventListener('submit', (event) => {
       else
         {
           nextButton.classList.add('hidden');
-        }
+        } 
 
 
     })
