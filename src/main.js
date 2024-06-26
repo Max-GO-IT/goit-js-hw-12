@@ -21,7 +21,27 @@ let currentQuery = '';
 let totalHits = 0;
 let searchQueryTemp = '';
 
+function showNoImagesMessage() {
+  iziToast.info({
+    title: 'Не знайдено зображень!',
+    message: 'На жаль, немає зображень, що відповідають вашому пошуковому запиту. Спробуйте ще раз!',
+  });
+  currentPage = 1;
+  nextButton.classList.add('hidden')
+}
 
+
+function handleError(error) {
+  loading.style.display = "none";
+  if (error.response && error.response.status === 404) {
+    showNoImagesMessage();
+  } else {
+    iziToast.error({
+      title: 'Помилка!',
+      message: 'Виникла помилка під час отримання даних. Перевірте своє підключення до інтернету або спробуйте пізніше.',
+    });
+  }
+}
 
 searchForm.addEventListener('submit', (event) => {
   event.preventDefault();
@@ -49,6 +69,11 @@ searchForm.addEventListener('submit', (event) => {
 
   fetchImages(searchQueryTemp,currentPage)
     .then(images => {
+      if (images.hits.length === 0) {
+        showNoImagesMessage();
+        return; 
+      }
+
       renderImages(images);
       
       if (!lightbox) {
@@ -76,13 +101,7 @@ searchForm.addEventListener('submit', (event) => {
     .then(() => {
       loading.style.display = "none";
     })
-    .catch(error => {
-      loading.style.display = "none";
-      iziToast.error({
-        title: 'Помилка!',
-        message: error.message,
-      });
-    });
+    .catch(handleError);
 });
 
 nextButton.addEventListener('click', (event) => {
@@ -97,6 +116,11 @@ nextButton.addEventListener('click', (event) => {
 
   fetchImages(searchQueryTemp,currentPage)
     .then(images => {
+      if (images.hits.length === 0) {
+        showNoImagesMessage();
+        return; 
+      }
+
       renderImages(images);
       
       if (!lightbox) {
@@ -124,13 +148,7 @@ nextButton.addEventListener('click', (event) => {
     .then(() => {
       loading.style.display = "none";
     })
-    .catch(error => {
-      loading.style.display = "none";
-      iziToast.error({
-        title: 'Помилка!',
-        message: error.message,
-      });
-    });
+    .catch(handleError);
 });
 
 
