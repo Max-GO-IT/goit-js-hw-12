@@ -41,7 +41,9 @@ function handleError(error) {
       message: 'Виникла помилка під час отримання даних. Перевірте своє підключення до інтернету або спробуйте пізніше.',
     });
   }
+  nextButton.classList.add('hidden');
 }
+
 
 searchForm.addEventListener('submit', (event) => {
   event.preventDefault();
@@ -69,6 +71,7 @@ searchForm.addEventListener('submit', (event) => {
 
   fetchImages(searchQueryTemp,currentPage)
     .then(images => {
+      totalHits = images.totalHits;
       if (images.hits.length === 0) {
         showNoImagesMessage();
         return; 
@@ -87,7 +90,7 @@ searchForm.addEventListener('submit', (event) => {
         lightbox.refresh(); 
       }
       
-      if(images.totalHits>(currentPage*15))
+      if(totalHits>((currentPage-1)*15))
         {
           nextButton.classList.remove('hidden');
         }
@@ -117,7 +120,13 @@ nextButton.addEventListener('click', (event) => {
   fetchImages(searchQueryTemp,currentPage)
     .then(images => {
       if (images.hits.length === 0) {
-        showNoImagesMessage();
+        totalHits = (currentPage-1) * 15;
+        iziToast.info({
+          title: 'Більше зображень немає!',
+          message: 'Ви досягли кінця результатів пошуку.',
+        });
+        nextButton.classList.add('hidden'); 
+
         return; 
       }
 
@@ -134,7 +143,7 @@ nextButton.addEventListener('click', (event) => {
         lightbox.refresh(); 
       }
       
-      if(images.totalHits>(currentPage*15))
+      if(totalHits>((currentPage-1)*15))
         {
           nextButton.classList.remove('hidden');
         }
